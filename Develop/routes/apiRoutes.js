@@ -24,6 +24,9 @@ module.exports = function(app){
 }
 
 // function that  reads the db file and converts the object to a string form and returns it
+// opens the json filer and then runs an error check
+// If there are no errors it will set noes equal to an empty array and then concat on the JSON note
+// this is then returned to be displayed on the front end
 function readNotes(){
     util.promisify(fs.readFile("../db/db.json", "utf8")).then(function(error,data){
         if (error){
@@ -36,6 +39,9 @@ function readNotes(){
 
 // Allows for a user input note to added to the json object in the db folder
 // This also attaches a unique uuid to the note
+// Creates a new object that takes in a title, text and id
+// It then runs the get note function and attaches the new note to the end of the array
+// It then writes this updated note array to the db.json file
 function addNote(note){
     const newNote = {title,text,id : uuid}
     return this.getNotes()
@@ -44,8 +50,14 @@ function addNote(note){
 
 }
 
+// This will start a function and take in an id variable
+// it will then run the getNotes function and filter that array by id
+// The new array that is generated will only have the entries that did not contain the sent id
+// Then the new filtered list is written to the db.json thereby eliminating the note with the targeted id
 function removeNote(id){
     return this.getNotes()
-    .then(note => note.filter(note => note.id != id))
+    .then(function(note){
+        note.filter(note => note.id != id)
+    })
     .then(filteredNotes => this.write(filteredNotes))
 }
