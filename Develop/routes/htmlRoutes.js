@@ -1,4 +1,3 @@
-// path dependency to allow targeting of html in other files 
 const path = require('path');
 
 // allows these functions to be used by other files
